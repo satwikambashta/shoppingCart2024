@@ -1,11 +1,17 @@
-import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ShoppingCartContext } from "../../context";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
-  const { productDetails, setProductDetails, loading, setLoading } =
-    useContext(ShoppingCartContext);
+  const {
+    productDetails,
+    setProductDetails,
+    loading,
+    setLoading,
+    handleAddToCart,
+  } = useContext(ShoppingCartContext);
+  const navigate = useNavigate();
 
   async function fetchProductDetails() {
     const apiResponse = await fetch(`https://dummyjson.com/products/${id}`);
@@ -47,6 +53,22 @@ const ProductDetailsPage = () => {
                     </div>
                   ))
                 : null}
+            </div>
+          </div>
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-extrabold text-blue-950">
+              {productDetails?.title}
+            </h2>
+            <div className="flex flex-wrap gap-4 mt-4">
+              <p className="text-xl font-bold">${productDetails?.price}</p>
+            </div>
+            <div>
+              <button
+                onClick={() => handleAddToCart(productDetails)}
+                className="min-w-[200px] px-4 py-3 border border-blue-950 bg-transparent text-sm font-semibold mt-5"
+              >
+                Add to cart
+              </button>
             </div>
           </div>
         </div>

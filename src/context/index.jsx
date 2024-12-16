@@ -6,6 +6,7 @@ function ShoppingCartProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [listOfProducts, setListOfProducts] = useState([]);
   const [productDetails, setProductDetails] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
 
   async function fetchListOfProducts() {
     setLoading(true);
@@ -24,6 +25,24 @@ function ShoppingCartProvider({ children }) {
     }
   }
 
+  function handleAddToCart(getProductDetails) {
+    console.log(getProductDetails);
+    let copyExistingCartItems = [...cartItems];
+    const findIndexOfCurrentItem = copyExistingCartItems.findIndex(
+      (cartItem) => cartItem.id === getProductDetails.id
+    );
+    if (findIndexOfCurrentItem !== -1) {
+      copyExistingCartItems.push({
+        ...getProductDetails,
+        quantity: 1,
+        totalPrice: getProductDetails?.price,
+      });
+    } else {
+    }
+    setCartItems(copyExistingCartItems);
+    localStorage.setItem("cartItems", JSON.stringify(copyExistingCartItems));
+  }
+
   useEffect(() => {
     fetchListOfProducts();
   }, []);
@@ -36,6 +55,7 @@ function ShoppingCartProvider({ children }) {
         listOfProducts,
         productDetails,
         setProductDetails,
+        handleAddToCart,
       }}
     >
       {children}
